@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        window.onload = function () {
+            submit.addEventListener('click', (e) => {
+                e.preventDefault()
+                document.getElementById('status').innerText = 'Ожидайте'
+                const xhr = new XMLHttpRequest()
+
+                xhr.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById('status').innerText = 'Готово'
+                        obj = JSON.parse(this.responseText)
+                        let el = document.createElement('ul')
+                        let model = document.createElement('li')
+                        model.innerText = obj.model
+                        let year = document.createElement('li')
+                        year.innerText = obj.year
+                        let color = document.createElement('li')
+                        color.innerText = obj.color
+                        let type = document.createElement('li')
+                        type.innerText = obj.type
+                        let category = document.createElement('li')
+                        category.innerText = obj.category
+                        let carP = document.createElement('li')
+                        carP.innerText = obj.carP
+                        let engineV = document.createElement('li')
+                        engineV.innerText = obj.engineV
+                        el.appendChild(model)
+                        el.appendChild(year)
+                        el.appendChild(color)
+                        el.appendChild(type)
+                        el.appendChild(category)
+                        el.appendChild(carP)
+                        el.appendChild(engineV)
+
+                        document.getElementById("response").appendChild(el)
+                    }
+                };
+                xhr.open('POST', '/getcarinfo')
+                xhr.setRequestHeader("Content-Type", "application/json");
+                const data = {
+                    vin: vin.value
+                }
+
+                xhr.send(JSON.stringify(data))
+
+                console.log('sended')
+            })
+        }
+    </script>
+</head>
+<body>
+    <h2>Get car info by VIN</h2>
+    <form action="">
+        <input id="vin" type="text" placeholder="enter VIN"> <br>
+        <input type="submit" id='submit'>
+    </form>
+    <p id="status"></p>
+    <div id="response"></div>
+</body>
+</html>
